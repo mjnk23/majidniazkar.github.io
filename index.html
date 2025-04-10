@@ -121,5 +121,24 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
+        <!-- Google Scholar Publications JS-->
+        <script>
+            async function fetchPublications() {
+                const response = await fetch('https://scholar.google.com/citations?user=j88TvigAAAAJ&hl=en&cstart=0&pagesize=5');
+                const text = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'text/html');
+                const publications = doc.querySelectorAll('.gsc_a_tr');
+                const publicationsList = document.getElementById('publications-list');
+                publications.forEach(pub => {
+                const title = pub.querySelector('.gsc_a_at').textContent;
+                const link = pub.querySelector('.gsc_a_at').href;
+                const publicationItem = document.createElement('div');
+                publicationItem.innerHTML = `<a href="${link}" target="_blank">${title}</a>`;
+                publicationsList.appendChild(publicationItem);
+                });
+                }
+    fetchPublications();
+</script>
     </body>
 </html>
