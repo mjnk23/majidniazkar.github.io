@@ -124,21 +124,18 @@
         <!-- Google Scholar Publications JS-->
         <script>
             async function fetchPublications() {
-                const response = await fetch('https://scholar.google.com/citations?user=j88TvigAAAAJ&hl=en&cstart=0&pagesize=5');
-                const text = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                const publications = doc.querySelectorAll('.gsc_a_tr');
+                const response = await fetch('/api/publications'); // Your server endpoint
+                const data = await response.json();
                 const publicationsList = document.getElementById('publications-list');
-                publications.forEach(pub => {
-                const title = pub.querySelector('.gsc_a_at').textContent;
-                const link = pub.querySelector('.gsc_a_at').href;
-                const publicationItem = document.createElement('div');
-                publicationItem.innerHTML = `<a href="${link}" target="_blank">${title}</a>`;
-                publicationsList.appendChild(publicationItem);
+                publicationsList.innerHTML = '';
+
+                data.forEach(pub => {
+                const item = document.createElement('div');
+                item.innerHTML = `<a href="${pub.link}" target="_blank">${pub.title}</a>`;
+                publicationsList.appendChild(item);
                 });
-                }
-    fetchPublications();
-</script>
+            }
+            fetchPublications();
+        </script>
     </body>
 </html>
